@@ -9,43 +9,51 @@ function getComputerChoice() {
   }
 }
 
-function getHumanChoice() {
-  let userPrompt = prompt("Please enter rock, paper or scissors");
-  return userPrompt.toLowerCase();
-}
-
 function playGame() {
+  const rock = document.querySelector(".rock");
+  const paper = document.querySelector(".paper");
+  const scissors = document.querySelector(".scissors");
+  const scoreboard = document.querySelector(".score");
+
   let humanScore = 0;
   let computerScore = 0;
+  let round = 0;
 
+  function showRound(score) {
+    scoreboard.textContent = score;
+  }
+  function showScore(humanScore, computerScore) {
+    scoreboard.textContent = `Player Score: ${humanScore} Computer Score ${computerScore}`;
+  }
   function playRound(humanChoice, computerChoice) {
-    if (humanChoice === computerChoice) {
-      console.log("It's a tie! Play again");
-    } else if (
+    let humanWin =
       (humanChoice === "rock" && computerChoice === "scissors") ||
       (humanChoice === "paper" && computerChoice === "rock") ||
-      (humanChoice === "scissors" && computerChoice === "paper")
-    ) {
+      (humanChoice === "scissors" && computerChoice === "paper");
+    if (humanChoice === computerChoice) {
+      return "You have tied!";
+    } else if (humanWin) {
       humanScore++;
-      console.log("You win! " + humanChoice + " beats " + computerChoice);
+      return "You have won!";
     } else {
       computerScore++;
-      console.log("You lose! " + computerChoice + " beats " + humanChoice);
+      return "You have lost!";
     }
   }
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
+  function rpsClick(playerSelection) {
+    round++;
+    const computerSelection = getComputerChoice();
+    const score = playRound(playerSelection, computerSelection);
+    showRound(score);
 
-  if (humanScore === computerScore) {
-    console.log("You have tied!");
-  } else if (humanScore > computerScore) {
-    console.log("Congratulations! You have won!");
-  } else {
-    console.log("Unlucky! You have lost!");
+    if (round === 5) {
+      showScore(humanScore, computerScore);
+    }
   }
+
+  rock.addEventListener("click", () => rpsClick("rock"));
+  paper.addEventListener("click", () => rpsClick("paper"));
+  scissors.addEventListener("click", () => rpsClick("scissors"));
 }
 
 playGame();
